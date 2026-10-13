@@ -1,0 +1,16 @@
+# Virtual Environment
+.venv/
+
+# python cache
+__pycache__/
+*.pyc
+
+# Data
+data/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# MlFlow
+mlruns/
+mlartifacts/
