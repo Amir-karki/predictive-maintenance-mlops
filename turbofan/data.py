@@ -49,3 +49,17 @@ def split_by_engine(
     gss = GroupShuffleSplit(n_splits=1, test_size=val_size, random_state=random_state)
     train_idx, val_idx = next(gss.split(df, groups=df["unit"]))
     return df.iloc[train_idx], df.iloc[val_idx]
+
+
+def load_test_rul(path: Path) -> pd.DataFrame:
+     
+     """Load the true RUL for each test engine.
+
+    The file has one number per line and no engine ID: line 1 is engine 1,
+    line 2 is engine 2, and so on. We add the `unit` column so the answers
+    can be matched to engines by ID rather than by position.
+    """
+     rul = pd.read_csv(path, sep=r"\s+", header=None, names=["rul"])
+     rul["unit"] = range(1, len(rul) + 1)
+     return rul
+

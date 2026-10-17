@@ -11,4 +11,18 @@
 - RUL capped at 125 (sensors show no wear signal above this).
 - For each of 15 sensors: raw value, 10-cycle rolling mean, 10-cycle rolling std (per engine,
   past-only) → 45 features.
-- Random forest, engine split, capped RUL: raw sensors RMSE <yours>, engineered RMSE <yours>.
+- Random forest, engine split, capped RUL: raw sensors RMSE 17.3 engineered RMSE 16.6
+
+## Training
+
+Run from the project root:
+
+```
+python -m turbofan.train
+```
+
+Trains a random forest on all 100 FD001 training engines and evaluates on NASA's
+100 test engines (predicting at each engine's last recorded cycle).
+
+- Test RMSE (true RUL):  20.58 cycles
+- Test RMSE (capped at 125): 19.57 cycles

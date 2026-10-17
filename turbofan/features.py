@@ -44,3 +44,12 @@ def get_feature_columns(sensors: list[str] = FEATURE_SENSORS) -> list[str]:
     means = [f"{s}_mean" for s in sensors]
     stds = [f"{s}_std" for s in sensors]
     return sensors + means + stds
+
+
+def last_cycle_per_engine(df: pd.DataFrame) -> pd.DataFrame:
+    """Keep only each engine's most recent cycle: the row we predict on.
+
+    Call this AFTER add_rolling_features, so each last row already
+    carries a summary of the cycles before it.
+    """
+    return df.sort_values(["unit", "cycle"]).groupby("unit").tail(1)
