@@ -1,0 +1,35 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: python -m turbofan.train
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: d837c3a078121f105697ffd3a1dff232.dir
+      size: 5744640
+      nfiles: 3
+    - path: turbofan/data.py
+      hash: md5
+      md5: 0a0776216105919dd1ca6aecbe7cd518
+      size: 2348
+    - path: turbofan/features.py
+      hash: md5
+      md5: 4b8c3ef418a4d00164b513c3455ef962
+      size: 2375
+    - path: turbofan/train.py
+      hash: md5
+      md5: 3fed54df95d8fa8a58bb9e22457e8bd2
+      size: 2315
+    outs:
+    - path: metrics.json
+      hash: md5
+      md5: 0da21286814f3d4b57365483e604fb13
+      size: 56
+    - path: models/features.json
+      hash: md5
+      md5: 91b77d7fd14289a6876a4296d0a13de2
+      size: 837
+    - path: models/model.joblib
+      hash: md5
+      md5: b097dcbbcb37c4f97bb7eb0543774118
+      size: 101783745

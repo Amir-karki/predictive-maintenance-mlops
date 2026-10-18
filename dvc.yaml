@@ -1,0 +1,14 @@
+stages:
+  train:
+    cmd: python -m turbofan.train
+    deps:
+      - data/raw
+      - turbofan/data.py
+      - turbofan/features.py
+      - turbofan/train.py
+    outs:
+      - models/model.joblib
+      - models/features.json
+    metrics:
+      - metrics.json:
+          cache: false

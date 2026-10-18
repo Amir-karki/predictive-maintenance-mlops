@@ -21,6 +21,7 @@ from turbofan.features import (
 )
 
 MODEL_DIR = Path("models")
+METRICS_PATH = Path("metrics.json")
 
 def build_trainig_data():
     """All 100 training engines, labeled, capped and with features."""
@@ -57,5 +58,13 @@ def main():
     (MODEL_DIR / "features.json").write_text(json.dumps(features, indent=2))
     print(f"Saved model and feature list to {MODEL_DIR}/")
 
+    metrics = {
+    "test_rmse": round(float(rmse), 2),
+    "test_rmse_capped": round(float(rmse_capped), 2),
+    }
+    METRICS_PATH.write_text(json.dumps(metrics, indent=2))
+    print(f"Saved metrics to {METRICS_PATH}")
+
 if __name__ == "__main__":
     main()
+
