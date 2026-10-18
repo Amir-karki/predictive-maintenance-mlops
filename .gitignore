@@ -5,15 +5,9 @@
 __pycache__/
 *.pyc
 
-# Data
-data/
-
 # Jupyter
 .ipynb_checkpoints/
 
 # MlFlow
 mlruns/
 mlartifacts/
-
-# Trained models — tracked by MLflow later, not Git
-models/
