@@ -26,3 +26,11 @@ Trains a random forest on all 100 FD001 training engines and evaluates on NASA's
 
 - Test RMSE (true RUL):  20.58 cycles
 - Test RMSE (capped at 125): 19.57 cycles
+
+## Reproducing the model
+
+```
+git clone <repo>
+dvc pull        # fetch the data and model
+dvc repro       # rebuild the model if anything changed
+```
