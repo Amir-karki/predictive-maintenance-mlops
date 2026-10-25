@@ -6,6 +6,9 @@ stages:
       - turbofan/data.py
       - turbofan/features.py
       - turbofan/train.py
+    params:
+      - features
+      - model
     outs:
       - models/model.joblib
       - models/features.json

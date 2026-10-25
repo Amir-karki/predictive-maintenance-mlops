@@ -10,26 +10,36 @@ stages:
       nfiles: 3
     - path: turbofan/data.py
       hash: md5
-      md5: 0a0776216105919dd1ca6aecbe7cd518
-      size: 2348
+      md5: d47c5b5258880f2527f3575b9636da8b
+      size: 2346
     - path: turbofan/features.py
       hash: md5
       md5: 4b8c3ef418a4d00164b513c3455ef962
       size: 2375
     - path: turbofan/train.py
       hash: md5
-      md5: 3fed54df95d8fa8a58bb9e22457e8bd2
-      size: 2315
+      md5: 6364e4e3d79bdc5594965ec41c4bfe73
+      size: 7127
+    params:
+      params.yaml:
+        features:
+          window: 10
+          rul_cap: 125
+        model:
+          n_estimators: 100
+          max_depth: 8
+          min_samples_leaf: 1
+          random_state: 42
     outs:
     - path: metrics.json
       hash: md5
-      md5: 0da21286814f3d4b57365483e604fb13
-      size: 56
+      md5: 84fa200348f3cdb796254f8a18b7e8c2
+      size: 78
     - path: models/features.json
       hash: md5
       md5: 91b77d7fd14289a6876a4296d0a13de2
       size: 837
     - path: models/model.joblib
       hash: md5
-      md5: b097dcbbcb37c4f97bb7eb0543774118
-      size: 101783745
+      md5: efbe72013795a9c0dd12e8889ce21d2e
+      size: 3654801

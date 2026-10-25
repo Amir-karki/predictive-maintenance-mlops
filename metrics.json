@@ -1,4 +1,5 @@
 {
-  "test_rmse": 20.58,
-  "test_rmse_capped": 19.57
+  "val_rmse": 16.47,
+  "test_rmse": 20.36,
+  "test_rmse_capped": 19.44
 }

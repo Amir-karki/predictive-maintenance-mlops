@@ -34,3 +34,17 @@ git clone <repo>
 dvc pull        # fetch the data and model
 dvc repro       # rebuild the model if anything changed
 ```
+
+## Experiment tracking
+
+Experiments are tracked with MLflow (local SQLite store). To view them: mlflow ui --backend-store-uri sqlite:///mlflow.db
+
+Then open http://127.0.0.1:5000.
+
+## Running experiments
+
+All settings live in `params.yaml`. To try new settings:
+
+1. Edit `params.yaml`
+2. Run `dvc repro` (trains, evaluates and logs an MLflow run)
+3. Compare runs in the MLflow UI, sorted by `val_rmse`

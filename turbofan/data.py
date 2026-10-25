@@ -5,7 +5,6 @@ import pandas as pd
 from sklearn.model_selection import GroupShuffleSplit
 
 # The raw files have no headers, so we need to spedify the column names.
-
 SETTING_COLS = ["setting_1", "setting_2", "setting_3"]
 SENSOR_COLS = [f"sensor_{i}" for i in range(1, 22)]
 COLUMNS = ["unit", "cycle"] + SETTING_COLS + SENSOR_COLS
