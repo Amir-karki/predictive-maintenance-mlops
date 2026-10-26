@@ -108,7 +108,7 @@ def main():
         METRICS_PATH.write_text(json.dumps(metrics, indent=2))
 
         # Artifacts for mlflow
-        mlflow.sklearn.log_model(model, name="model", input_example=test[features].head(5), skops_trusted_types=["sklearn.tree._tree.Tree"],)
+        mlflow.sklearn.log_model(model, name="model", input_example=test[features].head(5), skops_trusted_types=["sklearn.tree._tree.Tree"],registered_model_name=params["mlflow"]["registered_model"],)
         mlflow.log_artifact(str(MODEL_DIR / "features.json"))
         mlflow.log_artifact(str(PARAMS_PATH))
 
@@ -117,78 +117,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
