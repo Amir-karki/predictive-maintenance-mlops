@@ -26,20 +26,20 @@ stages:
           window: 10
           rul_cap: 125
         model:
-          n_estimators: 100
-          max_depth: 3
-          min_samples_leaf: 1
+          n_estimators: 200
+          max_depth: 8
+          min_samples_leaf: 7
           random_state: 42
     outs:
     - path: metrics.json
       hash: md5
-      md5: 5a5f9d513bb2aebccaf9e08ae970289c
-      size: 78
+      md5: 3c7f9117dd3fb0d23bc41b565d716a3d
+      size: 77
     - path: models/features.json
       hash: md5
       md5: 91b77d7fd14289a6876a4296d0a13de2
       size: 837
     - path: models/model.joblib
       hash: md5
-      md5: 46cf73669c73830081139e3a96d9a01b
-      size: 141633
+      md5: a7758bb3197f94c439ae74b6d947b5b3
+      size: 6111825

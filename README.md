@@ -48,3 +48,13 @@ All settings live in `params.yaml`. To try new settings:
 1. Edit `params.yaml`
 2. Run `dvc repro` (trains, evaluates and logs an MLflow run)
 3. Compare runs in the MLflow UI, sorted by `val_rmse`
+
+## Model registry
+
+Every training run registers a new version of `turbofan-rul` in MLflow.
+To decide whether it goes to production:
+
+    python -m turbofan.promote
+
+It becomes `@champion` only if its `val_rmse` beats the current champion's.
+Services load the production model from `models:/turbofan-rul@champion`.
