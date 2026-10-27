@@ -46,9 +46,16 @@ def build_test_data(params: dict):
     test = last_cycle_per_engine(test)
     return test.merge(load_test_rul(RAW_DIR / "RUL_FD001.txt"), on="unit")
 
-def make_model(params: dict) -> RandomForestRegressor:
+def make_model(model_params: dict) -> RandomForestRegressor:
     """Build an untrained model from the config's model settings."""
-    return RandomForestRegressor(**params["model"], n_jobs=-1)
+    return RandomForestRegressor(**model_params, n_jobs=-1)
+
+def validation_rmse(train, features: list, model_params: dict) -> float:
+    """Train on 80 engines, score on the other 20. Used to compare settings."""
+    tr, val = split_by_engine(train)
+    model = make_model(model_params)
+    model.fit(tr[features], tr["rul"])
+    return float(root_mean_squared_error(val["rul"], model.predict(val[features])))
 
 def data_version() -> str:
     """The DVC hash of the raw data: identifies the exact data version."""
@@ -80,13 +87,10 @@ def main():
         mlflow.set_tags({"git_commit": git_commit(), "data_md5": data_version()})
 
         # validation: train on 80 engines, score on 20 (use this to compare runs)
-        tr, val = split_by_engine(train)
-        val_model = make_model(params)
-        val_model.fit(tr[features], tr["rul"])
-        val_rmse = root_mean_squared_error(val["rul"], val_model.predict(val[features]))
+        val_rmse = validation_rmse(train, features, params["model"])
 
         # Final model: train on all engines, score once on NASA's test set.
-        model = make_model(params)
+        model = make_model(params["model"])
         model.fit(train[features], train["rul"])
         preds = model.predict(test[features])
         cap = params["features"]["rul_cap"]
