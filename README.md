@@ -58,3 +58,21 @@ To decide whether it goes to production:
 
 It becomes `@champion` only if its `val_rmse` beats the current champion's.
 Services load the production model from `models:/turbofan-rul@champion`.
+
+## Tuning
+
+    python -m turbofan.tune
+
+Searches model settings with Optuna and logs every trial to the
+`rul-fd001-tuning` MLflow experiment. Copy the printed best settings into
+`params.yaml`, then run `dvc repro` and `python -m turbofan.promote`.
+
+## Serving
+
+Start the prediction API from the project root:
+
+    uvicorn turbofan.serve:app --reload
+
+It loads `models:/turbofan-rul@champion` at startup. Interactive docs are at
+http://127.0.0.1:8000/docs. `POST /predict` takes an engine's recent cycle
+history and returns its predicted remaining useful life.
