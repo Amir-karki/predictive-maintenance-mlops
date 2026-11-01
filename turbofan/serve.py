@@ -120,15 +120,17 @@ def load_from_folder(model_dir: Path) -> dict:
         "source": "folder",
     }
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
+def load_champion() -> dict:
+    """Pick the model source: an exported folder if MODEL_DIR is set, else the registry."""
     model_dir = os.environ.get("MODEL_DIR")
     if model_dir:
-        app.state.champion = load_from_folder(Path(model_dir))
-    else:
-        app.state.champion = load_from_registry(load_params())
-    yield
+        return load_from_folder(Path(model_dir))
+    return load_from_registry(load_params())
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    app.state.champion = load_champion()
+    yield
 
 app = FastAPI(title="Turbofan RUL API", lifespan=lifespan)
 
