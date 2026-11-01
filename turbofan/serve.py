@@ -7,6 +7,10 @@ then serves predictions over HTTP. Run from the project root:
 
 from contextlib import asynccontextmanager
 
+import json
+import os
+from pathlib import Path
+
 import mlflow
 import pandas as pd
 from mlflow import MlflowClient
@@ -66,25 +70,15 @@ class PredictResponse(BaseModel):
 
 
 # ---------- Startup: load the champion and check it fits this code ----------
-def load_champion(params: dict) -> dict:
-    """Load the champion model plus the settings needed to feed it correctly."""
-
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
-    client = MlflowClient()
-    name = params["mlflow"]["registered_model"]
-
-    version = client.get_model_version_by_alias(name, ALIAS)
-    run = client.get_run(version.run_id)
-    model = mlflow.pyfunc.load_model(f"models:/{name}/{version.version}")
-
+def check_fits_code(model, label: str) -> list[str]:
+    """Fail at startup if the model and this code disagree. Returns the model's feature order."""
     expected = model.metadata.get_input_schema().input_names()
     ours = get_feature_columns()
     if set(expected) != set(ours):
         raise RuntimeError(
-            f"{name} v{version.version} expects different features than "
-            "turbofan.features produces. "
-            f"Only in model: {sorted(set(expected) - set(ours))}. "
-            f"Only in package: {sorted(set(ours) - set(expected))}."
+            f"{label} expects different features than turbofan.features produces."
+            f"Only in model: {sorted(set(expected) - set(ours))}"
+            f"Only in package: {sorted(set(ours) - set(expected))}"
         )
 
     accepted = set(CycleReading.model_fields) - {"cycle"}
@@ -93,17 +87,46 @@ def load_champion(params: dict) -> dict:
             "CycleReading's sensors don't match FEATURE_SENSORS: "
             f"{sorted(accepted ^ set(FEATURE_SENSORS))}"
         )
+    return expected
+
+def load_from_registry(params: dict) -> dict:
+    """Development: load the champion straight from the MLflow registry."""
+    mlflow.set_tracking_uri(params["mlflow"]["tracking_uri"])
+    client = MlflowClient()
+    name = params["mlflow"]["registered_model"]
+
+    version = client.get_model_version_by_alias(name, ALIAS)
+    run = client.get_run(version.run_id)
+    model = mlflow.pyfunc.load_model(f"models:/{name}/{version.version}")
 
     return {
         "model": model,
         "version": int(version.version),
         "window": int(run.data.params["window"]),
-        "features": expected,
+        "features": check_fits_code(model, f"{name} v{version.version}"),
+        "source": "registry",
+    }
+
+def load_from_folder(model_dir: Path) -> dict:
+    """Container: load an exported champion (see turbofan/export.py)"""
+    info = json.loads((model_dir/ "model_info.json").read_text())
+    model = mlflow.pyfunc.load_model(str(model_dir / "model"))
+
+    return {
+        "model": model,
+        "version": info["version"],
+        "window": info["window"],
+        "features": check_fits_code(model, f"exported v{info['version']}"),
+        "source": "folder",
     }
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    app.state.champion = load_champion(load_params())
+    model_dir = os.environ.get("MODEL_DIR")
+    if model_dir:
+        app.state.champion = load_from_folder(Path(model_dir))
+    else:
+        app.state.champion = load_from_registry(load_params())
     yield
 
 
@@ -113,7 +136,8 @@ app = FastAPI(title="Turbofan RUL API", lifespan=lifespan)
 # -------------Endpoints -----------------
 @app.get("/health")
 def health():
-    return {"status": "ok", "model_version": app.state.champion["version"]}
+    champ = app.state.champion
+    return {"status": "ok", "model_version": champ["version"], "source": champ["source"]}
 
 
 @app.post("/predict", response_model=PredictResponse)
