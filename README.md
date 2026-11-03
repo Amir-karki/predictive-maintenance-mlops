@@ -1,10 +1,12 @@
+![CI](https://github.com/Amir-karki/predictive-maintenance-mlops/actions/workflows/ci.yml/badge.svg)
+
 ## Data findings (FD001)
 
-- 6 sensors are constant across all engines and carry no information: <your list>
-- Strongest wear signals (correlation with RUL): <your top 4–5 sensors>
+- 6 sensors are constant across all engines and carry no information: 
+- Strongest wear signals (correlation with RUL): 
 - Sensors stay flat early in life; degradation appears in roughly the last 100–150 cycles,
   so RUL will be capped (~125) during feature engineering.
-- Validation must split by engine. Random-row split RMSE: <yours>, engine split RMSE: <yours>.
+- Validation must split by engine
 
 ## Features (FD001)
 
@@ -76,3 +78,34 @@ Start the prediction API from the project root:
 It loads `models:/turbofan-rul@champion` at startup. Interactive docs are at
 http://127.0.0.1:8000/docs. `POST /predict` takes an engine's recent cycle
 history and returns its predicted remaining useful life.
+
+## Docker
+
+Export the current champion and build an image tagged with its version:
+
+    python -m turbofan.export
+    docker build -t turbofan-api:v<version> .
+    docker run --rm -p 8000:8000 turbofan-api:v<version>
+
+The image contains the model, so it runs without the MLflow registry.
+
+## Tests
+
+    python -m pytest -v
+
+`tests/test_api.py` uses a fake model and runs anywhere.
+`tests/test_real_model.py` checks the exported champion and skips if
+`build/champion` or `data/raw` is missing.
+
+## Continuous integration
+
+`.github/workflows/ci.yml` runs on every push to `main` and every pull request:
+
+1. **Unit tests**: installs `requirements-ci.txt` (serving dependencies plus pytest)
+   and runs the test suite. Tests that need the real model or data are skipped.
+2. **Image build and smoke test**: builds the Docker image around a stand-in model
+   (`ci/make_standin_model.py`), starts it, and checks `/health` and `/predict`
+   from outside (`ci/smoke_test.py`).
+
+CI proves the code, image and API contract work. Model quality is checked by the
+promotion gate, and real-model parity by `tests/test_real_model.py`.
