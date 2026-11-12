@@ -1,4 +1,14 @@
 stages:
+  validate:
+    cmd: python -m turbofan.validate
+    deps:
+      - data/raw
+      - turbofan/validate.py
+      - turbofan/data.py
+      - data_profile.json
+    outs:
+      - validation_report.json:
+          cache: false 
   train:
     cmd: python -m turbofan.train
     deps:
@@ -6,6 +16,7 @@ stages:
       - turbofan/data.py
       - turbofan/features.py
       - turbofan/train.py
+      - validation_report.json
     params:
       - features
       - model
