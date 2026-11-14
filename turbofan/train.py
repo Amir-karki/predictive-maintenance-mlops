@@ -63,9 +63,12 @@ def data_version() -> str:
     return receipt["outs"][0]["md5"]
 
 def git_commit() -> str:
-    """The current Git commit: identifies the exact code version."""
-    result = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True)
-    return result.stdout.strip()
+    """The current Git commit, or 'unknown' where git isn't available (e.g. in Airflow)."""
+    try:
+        result = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True)
+    except FileNotFoundError:
+        return "unknown"
+    return result.stdout.strip() or "unknown"
 
 def main():
     params = load_params()
