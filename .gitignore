@@ -15,5 +15,11 @@ mlflow.db
 
 build/
 
+# airflow
+airflow/logs/
+airflow/.env
+airflow/config/
+
 # pytest
 .pytest_cache/
+
