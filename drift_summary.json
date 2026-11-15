@@ -1,0 +1,21 @@
+{
+  "drifted_columns": 15,
+  "share": 1.0,
+  "scores": {
+    "sensor_2": 126.007,
+    "sensor_3": 27.818,
+    "sensor_4": 22.609,
+    "sensor_6": 7206.198,
+    "sensor_7": 305.92,
+    "sensor_8": 2243.013,
+    "sensor_9": 24.456,
+    "sensor_11": 17.058,
+    "sensor_12": 346.213,
+    "sensor_13": 745.553,
+    "sensor_14": 4.045,
+    "sensor_15": 23.664,
+    "sensor_17": 28.992,
+    "sensor_20": 99.739,
+    "sensor_21": 99.921
+  }
+}

@@ -10,3 +10,4 @@ optuna==5.0.0
 fastapi[standard]
 httpx==0.28.1
 pytest==9.2.0
+evidently==0.7.23

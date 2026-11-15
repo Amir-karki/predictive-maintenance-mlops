@@ -23,3 +23,5 @@ airflow/config/
 # pytest
 .pytest_cache/
 
+#reports
+reports/
