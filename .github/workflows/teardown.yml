@@ -1,0 +1,29 @@
+name: Teardown
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  teardown:
+    name: Delete the ECS service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sign in to AWS
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: us-west-2
+
+      - name: Delete the service
+        run: |
+          ARN=$(aws ecs list-services --cluster default --query "serviceArns[?contains(@, 'turbofan-api')] | [0]" --output text)
+          echo "Found: $ARN"
+          if [ -z "$ARN" ] || [ "$ARN" = "None" ]; then
+            echo "Nothing to delete."
+            exit 0
+          fi
+          aws ecs delete-express-gateway-service --service-arn "$ARN"
