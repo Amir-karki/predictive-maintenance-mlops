@@ -49,3 +49,33 @@ jobs:
 
             - name: Check the model version matches
               run: test "$(jq .version build/champion/model_info.json)" = "${{ vars.MODEL_VERSION }}"
+
+            - name: Log in to ECR
+              id: ecr
+              uses: aws-actions/amazon-ecr-login@v2
+
+            - name: Build and push the image
+              env:
+               REGISTRY: ${{ steps.ecr.outputs.registry }}
+               TAG: ${{ github.event.workflow_run.head_sha }}
+              run: |
+               docker build -t "$REGISTRY/turbofan-api:$TAG" .
+               docker push "$REGISTRY/turbofan-api:$TAG"
+
+            - name: Deploy to ECS Express
+              id: deploy
+              uses: aws-actions/amazon-ecs-deploy-express-service@v1
+              with:
+                service-name: turbofan-api
+                image: ${{ steps.ecr.outputs.registry }}/turbofan-api:${{ github.event.workflow_run.head_sha }}
+                execution-role-arn: arn:aws:iam::195275643864:role/ecsTaskExecutionRole
+                infrastructure-role-arn: arn:aws:iam::195275643864:role/ecsInfrastructureRoleForExpressServices
+                container-port: 8000
+                health-check-path: /health
+                cpu: '512'
+                memory: '1024'
+                min-task-count: 1
+                max-task-count: 1
+
+            - name: Show the service URL
+              run: echo "Deployed ${{ steps.deploy.outputs.endpoint }}"
