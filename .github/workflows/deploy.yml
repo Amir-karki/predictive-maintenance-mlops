@@ -1,0 +1,20 @@
+name: Deploy
+
+on:
+    workflow_run:
+        workflows: ["CI"]
+        types: [completed]
+        branches: [main]
+
+permissions:
+    id-token: write
+    contents: read
+
+jobs:
+    deploy:
+        name: Deploy to ECS
+        runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' && vars.DEPLOY_ENABLED == 'true' }}
+        steps:
+            - name: Show what would be deployed
+              run: echo "Commit ${{ github.event.workflow_run.head_sha }}, model v${{ vars.MODEL_VERSION }}"
