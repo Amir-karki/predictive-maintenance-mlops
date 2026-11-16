@@ -18,3 +18,17 @@ jobs:
         steps:
             - name: Show what would be deployed
               run: echo "Commit ${{ github.event.workflow_run.head_sha }}, model v${{ vars.MODEL_VERSION }}"
+
+            - name: Check out the tested commit
+              uses: actions/checkout@v5
+              with:
+                ref: ${{ github.event.workflow_run.head_sha }}
+
+            - name: Sign in to AWS
+              uses: aws-actions/configure-aws-credentials@v5
+              with:
+                role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+                aws-region: us-west-2
+
+            - name: Who am I?
+              run: aws sts get-caller-identity
