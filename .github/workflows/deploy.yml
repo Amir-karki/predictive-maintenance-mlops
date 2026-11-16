@@ -41,11 +41,11 @@ jobs:
                 role-to-assume: ${{ vars.AWS_ROLE_ARN }}
                 aws-region: us-west-2
 
-            - name: Who am I?
-              run: aws sts get-caller-identity
+            - name: Fetch the model from S3
+              run: |
+               aws s3 cp "s3://turbofan-storage/models/v${{ vars.MODEL_VERSION }}/" build/champion/ --recursive
+               ls -la build/champion
+               cat build/champion/model_info.json
 
-            # - name: Fetch the model from S3
-            #   run: aws s3 cp "s3://turbofan-storage/models/v${{ vars.MODEL_VERSION }}/" build/champion/ --recursive
-
-            # - name: Check the model is the version we asked for
-            #   run: test "$(jq .version build/champion/model_info.json)" = "${{ vars.MODEL_VERSION }}"
+            - name: Check the model version matches
+              run: test "$(jq .version build/champion/model_info.json)" = "${{ vars.MODEL_VERSION }}"
