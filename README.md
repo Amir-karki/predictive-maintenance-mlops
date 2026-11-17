@@ -243,3 +243,5 @@ The image contains the model, so it runs without the MLflow registry.
 
 CI proves the code, image and API contract work. Model quality is checked by the
 promotion gate, and real-model parity by `tests/test_real_model.py`.
+
+Read the [write-up](docs/writeup.md) for the story behind the project.
