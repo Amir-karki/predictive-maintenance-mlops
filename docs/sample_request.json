@@ -1,0 +1,10 @@
+{
+  "unit": 1,
+  "cycles": [
+    {"cycle": 1, "sensor_2": 641.82, "sensor_3": 1589.70, "sensor_4": 1400.60, "sensor_6": 21.61, "sensor_7": 554.36, "sensor_8": 2388.06, "sensor_9": 9046.19, "sensor_11": 47.47, "sensor_12": 521.66, "sensor_13": 2388.02, "sensor_14": 8138.62, "sensor_15": 8.4195, "sensor_17": 392, "sensor_20": 39.06, "sensor_21": 23.4190},
+    {"cycle": 2, "sensor_2": 642.15, "sensor_3": 1591.82, "sensor_4": 1403.14, "sensor_6": 21.61, "sensor_7": 553.75, "sensor_8": 2388.04, "sensor_9": 9044.07, "sensor_11": 47.49, "sensor_12": 522.28, "sensor_13": 2388.07, "sensor_14": 8131.49, "sensor_15": 8.4318, "sensor_17": 392, "sensor_20": 39.00, "sensor_21": 23.4236},
+    {"cycle": 3, "sensor_2": 642.35, "sensor_3": 1587.99, "sensor_4": 1404.20, "sensor_6": 21.61, "sensor_7": 554.26, "sensor_8": 2388.08, "sensor_9": 9052.94, "sensor_11": 47.27, "sensor_12": 522.42, "sensor_13": 2388.03, "sensor_14": 8133.23, "sensor_15": 8.4178, "sensor_17": 390, "sensor_20": 38.95, "sensor_21": 23.3442},
+    {"cycle": 4, "sensor_2": 642.35, "sensor_3": 1582.79, "sensor_4": 1401.87, "sensor_6": 21.61, "sensor_7": 554.45, "sensor_8": 2388.11, "sensor_9": 9049.48, "sensor_11": 47.13, "sensor_12": 522.86, "sensor_13": 2388.08, "sensor_14": 8133.83, "sensor_15": 8.3682, "sensor_17": 392, "sensor_20": 38.88, "sensor_21": 23.3739},
+    {"cycle": 5, "sensor_2": 642.37, "sensor_3": 1582.85, "sensor_4": 1406.22, "sensor_6": 21.61, "sensor_7": 554.00, "sensor_8": 2388.06, "sensor_9": 9055.15, "sensor_11": 47.28, "sensor_12": 522.19, "sensor_13": 2388.04, "sensor_14": 8133.80, "sensor_15": 8.4294, "sensor_17": 393, "sensor_20": 38.90, "sensor_21": 23.4044}
+  ]
+}

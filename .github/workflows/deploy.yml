@@ -23,18 +23,7 @@ jobs:
               uses: actions/checkout@v5
               with:
                 ref: ${{ github.event.workflow_run.head_sha }}
-            - name: Show the OIDC claims
-              run: |
-                URL="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=sts.amazonaws.com"
-                TOKEN=$(curl -sS -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$URL" | jq -r .value)
-                python3 - "$TOKEN" <<'PY'
-                import sys, json, base64
-                part = sys.argv[1].split(".")[1]
-                part += "=" * (-len(part) % 4)
-                claims = json.loads(base64.urlsafe_b64decode(part))
-                print({k: claims.get(k) for k in ("sub", "aud", "repository", "ref", "event_name")})
-                PY
-
+  
             - name: Sign in to AWS
               uses: aws-actions/configure-aws-credentials@v5
               with:
